@@ -1,0 +1,73 @@
+{
+  "channels": [
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_1",
+      "channelName": "Path2Pro Trades 1",
+      "niche": "Trades",
+      "keywords": ["trades", "vocational training", "apprenticeship", "skilled labor", "electrician", "plumber", "carpenter", "hvac"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_2",
+      "channelName": "Path2Pro Trades 2",
+      "niche": "Trades",
+      "keywords": ["welding", "construction", "trade school", "blue collar", "electrician training"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_3",
+      "channelName": "African Mythology Stories",
+      "niche": "Mythology",
+      "keywords": ["african mythology", "anansi", "yoruba gods", "zulu legends", "african folklore"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_4",
+      "channelName": "African Mythology Explained",
+      "niche": "Mythology",
+      "keywords": ["african gods", "african creation myths", "griots", "african spiritual traditions"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_5",
+      "channelName": "Scouting Skills",
+      "niche": "Scouts",
+      "keywords": ["scouting", "boy scouts", "camping skills", "wilderness survival", "outdoor skills", "orienteering"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_6",
+      "channelName": "Neurodivergent Parenting",
+      "niche": "Neurodivergent",
+      "keywords": ["neurodivergent parenting", "adhd parenting", "autism parenting", "neurodiversity", "special needs children"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_7",
+      "channelName": "1001 Nights Stories Vol 1",
+      "niche": "Stories",
+      "keywords": ["1001 nights", "arabian nights", "scheherazade", "sinbad", "ali baba", "bedtime stories"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_8",
+      "channelName": "1001 Nights Stories Vol 2",
+      "niche": "Stories",
+      "keywords": ["arabian folklore", "middle eastern stories", "oral tradition", "fairy tales", "storytelling"]
+    },
+    {
+      "channelId": "REPLACE_WITH_REAL_CHANNEL_ID_9",
+      "channelName": "1001 Nights Podcast",
+      "niche": "Stories",
+      "keywords": ["arabian nights podcast", "storytelling podcast", "world folklore", "children audio stories"]
+    }
+  ],
+  "niches": ["Trades", "Mythology", "Scouts", "Neurodivergent", "Stories"],
+  "redditMapping": {
+    "Trades": ["Welding", "electricians", "plumbing", "HVAC", "construction", "TradesmanPorn"],
+    "Mythology": ["mythology", "AfricanHistory", "folklore", "worldmythology", "religion"],
+    "Scouts": ["scouts", "camping", "survival", "outdoors", "bushcraft"],
+    "Neurodivergent": ["ADHD", "autism", "neurodiversity", "Parenting", "specialed"],
+    "Stories": ["storytelling", "folklore", "fairytales", "worldbuilding", "books"]
+  },
+  "tiktokKeywords": {
+    "Trades": ["tradelife", "tradie", "electrician", "plumber", "carpenter", "hvactok"],
+    "Mythology": ["mythology", "africanmythology", "folklore", "gods"],
+    "Scouts": ["scouts", "camping", "survival", "outdoors", "hiking"],
+    "Neurodivergent": ["neurodivergent", "adhd", "autism", "autismmom", "adhdparenting"],
+    "Stories": ["storytime", "1001nights", "arabiannights", "bedtimestories", "storytelling"]
+  }
+}

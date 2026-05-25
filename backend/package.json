@@ -1,0 +1,30 @@
+{
+  "name": "empirika-backend",
+  "version": "1.0.0",
+  "description": "Empirika data pipeline, ETL, and API backend",
+  "type": "module",
+  "main": "scripts/server.js",
+  "scripts": {
+    "start": "node scripts/server.js",
+    "dev": "node --watch scripts/server.js",
+    "fetch": "node scripts/fetchAnalytics.js",
+    "fetch:daily": "node scripts/fetchAnalytics.js --days 1",
+    "setup:auth": "node scripts/setupAuth.js",
+    "setup:bigquery": "node scripts/setupBigQuery.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "@google-cloud/bigquery": "^7.9.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "snoowrap": "^1.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
