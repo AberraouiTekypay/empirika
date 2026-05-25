@@ -2,8 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // Allow BigQuery & Anthropic SDK in server-side API routes
-  serverExternalPackages: ['@google-cloud/bigquery', '@anthropic-ai/sdk'],
+  // Allow BigQuery & Anthropic SDK in server-side API routes (Next.js 14)
+  experimental: {
+    serverComponentsExternalPackages: ['@google-cloud/bigquery', '@anthropic-ai/sdk'],
+  },
 
   // Environment variables exposed to the browser
   env: {
