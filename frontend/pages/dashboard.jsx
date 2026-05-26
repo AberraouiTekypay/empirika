@@ -16,7 +16,7 @@ const TABS = [
 
 export default function Dashboard() {
   const router = useRouter();
-  const [selectedNiche, setSelectedNiche] = useState('Trades');
+  const [selectedNiche, setSelectedNiche] = useState('Beauty & Skincare');
   const [activeTab, setActiveTab] = useState('overview');
   const [userEmail, setUserEmail] = useState('');
 
