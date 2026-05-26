@@ -30,10 +30,11 @@ export default function Navigation() {
               {link.label}
             </a>
           ))}
-          <a href="/dashboard" style={{
+          <a href="/login" style={{
             padding: '8px 20px', background: 'var(--accent)', color: 'white',
             borderRadius: 6, fontSize: 14, fontWeight: 500, textDecoration: 'none',
             border: '1px solid var(--accent)', transition: 'background 0.2s',
+            fontFamily: 'Inter, sans-serif',
           }}
           onMouseEnter={e => e.target.style.background = 'var(--accent-dark)'}
           onMouseLeave={e => e.target.style.background = 'var(--accent)'}>

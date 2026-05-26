@@ -1,33 +1,33 @@
 const FEATURES = [
   {
-    icon: '📊',
+    num: '01',
     title: 'Granular Audience Segmentation',
     body: 'Behavioral clustering across 100+ engagement dimensions. Move beyond demographics to true psychographic and interest-based cohorts that predict campaign performance.',
   },
   {
-    icon: '🔗',
+    num: '02',
     title: 'Cross-Platform Affinity Analysis',
-    body: 'Understand audience journeys beyond a single platform. Map content affinities across YouTube, TikTok, Reddit, and more to find your audience wherever they gather.',
+    body: 'Map content affinities across YouTube, TikTok, Reddit, and more to find your audience wherever they gather. First-party signals only.',
   },
   {
-    icon: '🤖',
+    num: '03',
     title: 'Predictive Modeling',
-    body: 'Identify lookalike cohorts, predict purchase propensity, and model audience growth trajectories. Statistical models trained on verified first-party behavioral signals.',
+    body: 'Identify lookalike cohorts, predict purchase propensity, and model audience growth trajectories. Statistical models trained on verified behavioral signals.',
   },
   {
-    icon: '💬',
+    num: '04',
     title: 'Real-Time Sentiment Monitoring',
-    body: 'Track what audiences are saying across Reddit, Twitter/X, and social platforms. Keyword trending, sentiment scoring, and community health metrics in real time.',
+    body: 'Track what audiences say across Reddit, Twitter/X, and social platforms. Keyword trending, sentiment scoring, and community health metrics — updated daily.',
   },
   {
-    icon: '⚡',
+    num: '05',
     title: 'Enterprise API',
     body: 'Plug Empirika intelligence directly into your martech stack. RESTful API with OpenAPI spec, webhook support, and SDKs for Python, Node.js, and Go.',
   },
   {
-    icon: '📈',
+    num: '06',
     title: 'Statistical Validation',
-    body: 'Every insight is confidence-scored. See sample sizes, p-values, and confidence intervals alongside every segment. Data science transparency as standard.',
+    body: 'Every insight is confidence-scored. Sample sizes, p-values, and confidence intervals surface alongside every segment. Data science transparency as standard.',
   },
 ];
 
@@ -36,24 +36,51 @@ export default function FeaturesGrid() {
     <section style={{ padding: '100px 0', borderBottom: '1px solid var(--border)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
 
-        <p style={{ fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase',
-          color: 'var(--text-tertiary)', marginBottom: 16 }}>
+        <p style={{
+          fontSize: 11,
+          letterSpacing: '2.5px',
+          textTransform: 'uppercase',
+          color: 'var(--text-tertiary)',
+          marginBottom: 16,
+          fontFamily: 'Inter, sans-serif',
+        }}>
           Platform
         </p>
-        <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(32px,4vw,42px)',
-          fontWeight: 300, color: 'var(--text-primary)', marginBottom: 16, maxWidth: 500 }}>
-          How Empirika works.
-        </h2>
-        <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)',
-          maxWidth: 620, marginBottom: 56 }}>
-          We aggregate first-party behavioral data, apply statistical rigor, and deliver predictive
-          intelligence through an enterprise API and self-service dashboard.
-        </p>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          gap: 40,
+          marginBottom: 64,
+          flexWrap: 'wrap',
+        }}>
+          <h2 style={{
+            fontFamily: 'Cormorant Garamond, serif',
+            fontSize: 'clamp(32px,4vw,44px)',
+            fontWeight: 300,
+            color: 'var(--text-primary)',
+            lineHeight: 1.15,
+            letterSpacing: '-0.5px',
+            maxWidth: 420,
+          }}>
+            How Empirika works.
+          </h2>
+          <p style={{
+            fontSize: 15,
+            lineHeight: 1.7,
+            color: 'var(--text-secondary)',
+            maxWidth: 440,
+          }}>
+            We aggregate first-party behavioral data, apply statistical rigor, and deliver predictive
+            intelligence through an enterprise API and self-service dashboard.
+          </p>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}
+        {/* Feature list — editorial, no icons */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px' }}
           className="features-grid">
-          {FEATURES.map(f => (
-            <FeatureCard key={f.title} {...f} />
+          {FEATURES.map((f, i) => (
+            <FeatureCard key={f.num} {...f} last={i === FEATURES.length - 1} />
           ))}
         </div>
       </div>
@@ -61,28 +88,52 @@ export default function FeaturesGrid() {
   );
 }
 
-function FeatureCard({ icon, title, body }) {
+function FeatureCard({ num, title, body }) {
   return (
     <div
-      style={{ background: 'var(--bg-card)', border: '1px solid var(--border)',
-        borderRadius: 8, padding: 32, transition: 'border-color 0.25s, background 0.25s',
-        cursor: 'default' }}
+      style={{
+        padding: '36px 32px',
+        border: '1px solid var(--border)',
+        background: 'var(--bg-card)',
+        transition: 'background 0.2s',
+        cursor: 'default',
+        position: 'relative',
+      }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'var(--accent)';
         e.currentTarget.style.background =
-          'linear-gradient(135deg,rgba(59,130,246,0.05) 0%,rgba(59,130,246,0.02) 100%)';
+          'linear-gradient(135deg, rgba(59,130,246,0.04) 0%, rgba(59,130,246,0.01) 100%)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'var(--border)';
         e.currentTarget.style.background = 'var(--bg-card)';
       }}
     >
-      <div style={{ fontSize: 32, marginBottom: 16 }}>{icon}</div>
-      <h3 style={{ fontSize: 17, fontWeight: 500, color: 'var(--text-primary)',
-        marginBottom: 10, lineHeight: 1.3 }}>
+      <p style={{
+        fontFamily: 'Cormorant Garamond, serif',
+        fontSize: 48,
+        fontWeight: 300,
+        color: 'rgba(255,255,255,0.04)',
+        lineHeight: 1,
+        marginBottom: 20,
+        letterSpacing: '-1px',
+      }}>
+        {num}
+      </p>
+      <h3 style={{
+        fontSize: 16,
+        fontWeight: 500,
+        color: 'var(--text-primary)',
+        marginBottom: 12,
+        lineHeight: 1.35,
+        fontFamily: 'Inter, sans-serif',
+      }}>
         {title}
       </h3>
-      <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+      <p style={{
+        fontSize: 14,
+        lineHeight: 1.75,
+        color: 'var(--text-secondary)',
+        fontFamily: 'Inter, sans-serif',
+      }}>
         {body}
       </p>
     </div>
