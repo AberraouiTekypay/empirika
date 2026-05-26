@@ -6,7 +6,7 @@ import AffinityInsights from '../components/AffinityInsights';
 import SentimentTrends from '../components/SentimentTrends';
 import InsightReport from '../components/InsightReport';
 
-const NICHES = ['Trades', 'Mythology', 'Scouts', 'Neurodivergent', 'Stories'];
+const NICHES = ['Beauty & Skincare', 'Health & Wellness', 'Home & Living', 'Food & Beverage', 'Parenting & Family'];
 const TABS = [
   { id: 'overview',   label: 'Audience' },
   { id: 'affinity',   label: 'Affinity' },

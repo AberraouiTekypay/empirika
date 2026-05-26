@@ -100,7 +100,7 @@ To add more protected routes, update `PROTECTED` in `pages/_app.jsx`.
 | `SENTIMENT_DATA` | `SentimentTrends` | Sentiment score, label, summary, and top keywords |
 | `INSIGHT_DATA` | `InsightReport` | Pre-written AI intelligence reports per niche |
 
-All 5 niches are covered: **Trades, Mythology, Scouts, Neurodivergent, Stories**.
+All 5 niches are covered: **Beauty & Skincare, Health & Wellness, Home & Living, Food & Beverage, Parenting & Family**.
 
 To switch a component to live data, replace the `setTimeout` + fake data import with a real `fetch()` call to the backend API.
 
@@ -134,7 +134,7 @@ These Next.js API routes proxy requests to the backend. In demo mode they are no
 | `GET /api/health` | Health check |
 | `POST /api/admin/sync` | Trigger manual data sync |
 
-Valid niche values: `Trades`, `Mythology`, `Scouts`, `Neurodivergent`, `Stories`
+Valid niche values: `Beauty & Skincare`, `Health & Wellness`, `Home & Living`, `Food & Beverage`, `Parenting & Family`
 
 ---
 

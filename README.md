@@ -61,13 +61,13 @@ To connect live BigQuery data, set the environment variables in `backend/.env` a
 
 ## 5 Niches
 
-| Niche | Channels | Description |
-|-------|----------|-------------|
-| Trades | 2 | Skilled trades — Path2Pro, Career Academy |
-| Mythology | 2 | African mythology — gods, folklore, griots |
-| Scouts | 1 | Outdoor skills, scouting, wilderness |
-| Neurodivergent | 1 | ADHD/autism parenting & caregiving |
-| Stories | 3 | 1001 Nights — Arabian storytelling |
+| Niche | Description | Key Brands |
+|-------|-------------|------------|
+| Beauty & Skincare | Skincare routines, makeup, dermatology, clean beauty | L'Oréal, Cetaphil, The Ordinary, Fenty |
+| Health & Wellness | Fitness, nutrition, supplements, biohacking, mental health | Whoop, Levels, AG1, Momentous |
+| Home & Living | Interior design, decluttering, DIY, sustainable home | IKEA, Muji, Hay, Anthropologie |
+| Food & Beverage | Cooking, baking, meal prep, restaurant culture, drinks | Zwilling, HelloFresh, Ooni, Vitamix |
+| Parenting & Family | Child development, family lifestyle, education, toys | Fisher-Price, Lovevery, Osmo, KiwiCo |
 
 ---
 
