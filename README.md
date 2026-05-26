@@ -2,7 +2,7 @@
 
 **Enterprise audience intelligence for niche YouTube markets. What Nielsen can't see.**
 
-First-party YouTube channel data → brand intelligence API, served with sandbox mode, Swagger docs, and a self-serve developer portal.
+First-party YouTube channel data → brand intelligence API, served with sandbox mode, Swagger docs, and a self-serve developer portal. The dashboard ships in **demo mode** out of the box — no BigQuery required to explore the full product experience.
 
 **Live:** [empirika.co](https://empirika.co) &nbsp;|&nbsp; **API Docs:** [empirika.co/docs](https://empirika.co/docs) &nbsp;|&nbsp; **Developer Portal:** [empirika.co/developer](https://empirika.co/developer)
 
@@ -38,9 +38,24 @@ REST API  /v1/*  ←  authenticate middleware (API key + rate limiting)
         ▼
 Next.js Frontend  (Vercel)
   /               Landing page
-  /dashboard      4-tab intelligence dashboard
+  /login          Authentication gate
+  /dashboard      4-tab intelligence dashboard (demo data built-in)
   /developer      Self-serve API key portal
 ```
+
+---
+
+## Demo Mode
+
+The dashboard is fully functional without any external services. When visiting `/dashboard` users are first routed through `/login`.
+
+**Demo credentials:**
+- Email: any valid email address
+- Access code: `demo`
+
+All four dashboard tabs (Audience, Affinity, Sentiment, AI Insight) load rich pre-built data from `frontend/lib/fakeData.js` — covering all 5 niches with realistic metrics, trend indicators, sparklines, and AI insight reports.
+
+To connect live BigQuery data, set the environment variables in `backend/.env` and run the ETL pipeline (see Quick Start below).
 
 ---
 
@@ -61,9 +76,9 @@ Next.js Frontend  (Vercel)
 ### Prerequisites
 
 - Node.js 18+
-- Google Cloud account (BigQuery + YouTube Data API v3 + Analytics API v2)
-- Anthropic API key
-- Supabase project (free tier works)
+- (Optional for live data) Google Cloud account — BigQuery + YouTube APIs + service account
+- (Optional for AI insights) Anthropic API key
+- (Optional for API key management) Supabase project
 
 ### 1. Clone & install
 
@@ -75,14 +90,23 @@ cd backend  && npm install
 cd ../frontend && npm install
 ```
 
-### 2. Configure environment
+### 2. Start in demo mode (no credentials required)
+
+```bash
+# Terminal 1 — frontend only
+cd frontend && npm run dev
+```
+
+Visit http://localhost:3000, click **Dashboard**, and sign in with any email + code `demo`.
+
+### 3. Configure environment (for live data)
 
 ```bash
 cp .env.example backend/.env
-# Then edit backend/.env — see Environment Variables section below
+# Edit backend/.env — see Environment Variables section below
 ```
 
-### 3. Create Supabase tables
+### 4. Create Supabase tables
 
 Run the following SQL in your Supabase SQL Editor:
 
@@ -133,31 +157,31 @@ create policy "service role full access" on api_keys  for all using (true) with 
 create policy "service role full access" on api_usage for all using (true) with check (true);
 ```
 
-### 4. Create BigQuery tables
+### 5. Create BigQuery tables
 
 ```bash
 cd backend
 npm run setup:bigquery
 ```
 
-### 5. Authorise YouTube channels
+### 6. Authorise YouTube channels
 
 ```bash
 npm run setup:auth
-# Follow the prompts to complete OAuth consent for each channel owner
+# Follow prompts to complete OAuth consent for each channel owner
 ```
 
-### 6. Add real channel IDs
+### 7. Add real channel IDs
 
 Edit `backend/config/channels.json` — replace all `REPLACE_WITH_REAL_CHANNEL_ID_*` values with actual YouTube channel IDs.
 
-### 7. Fetch initial data
+### 8. Fetch initial data
 
 ```bash
 npm run fetch -- --days 30
 ```
 
-### 8. Start the servers
+### 9. Start both servers (live data mode)
 
 ```bash
 # Terminal 1 — backend API (port 5000)
@@ -170,10 +194,32 @@ cd frontend && npm run dev
 | URL | What |
 |-----|------|
 | http://localhost:3000 | Landing page |
+| http://localhost:3000/login | Authentication |
 | http://localhost:3000/dashboard | Intelligence dashboard |
 | http://localhost:3000/developer | Developer portal |
 | http://localhost:5000/docs | Swagger UI |
 | http://localhost:5000/api/health | Backend health check |
+
+---
+
+## Authentication
+
+The frontend uses a lightweight localStorage-based auth gate.
+
+| Route | Access |
+|-------|--------|
+| `/` | Public |
+| `/login` | Public |
+| `/developer` | Public |
+| `/dashboard` | Requires auth — redirects to `/login` if not signed in |
+
+**How it works:**
+1. User visits `/login`, enters email + access code
+2. On success, `empirika_authed` is written to `localStorage` with email and timestamp
+3. `_app.jsx` checks this on every protected page load and redirects to `/login` if absent
+4. Sign-out clears `localStorage` and redirects to `/login`
+
+To change the access code, update the check in `frontend/pages/login.jsx`.
 
 ---
 
@@ -188,7 +234,7 @@ X-API-Key: emp_sandbox_your_key_here
 Authorization: Bearer emp_sandbox_your_key_here
 ```
 
-Get a free sandbox key at `/developer` or via the API itself:
+Get a free sandbox key at `/developer` or via the API:
 
 ```bash
 curl -X POST http://localhost:5000/v1/keys \
@@ -202,8 +248,6 @@ curl -X POST http://localhost:5000/v1/keys \
 |---|---|---|
 | `emp_sandbox_*` | Rich deterministic mock data — no BigQuery required | 60 req/min |
 | `emp_live_*` | Live BigQuery — real YouTube analytics | 120 req/min |
-
-Sandbox keys are free and instant. Production keys require the BigQuery pipeline to be running.
 
 ### Rate limit headers
 
@@ -224,7 +268,7 @@ X-RateLimit-Reset:     1716750000
 | `GET` | `/v1/audience/:niche` | Per-channel metrics: views, watch hours, subscribers gained, likes, comments |
 | `GET` | `/v1/affinity/:niche` | Cross-niche audience overlap scores with examples |
 | `GET` | `/v1/sentiment/:niche` | Community sentiment score (0–100), label, and top trending keywords |
-| `GET` | `/v1/insights/:niche` | AI-generated audience intelligence report (Claude claude-sonnet-4-20250514) |
+| `GET` | `/v1/insights/:niche` | AI-generated audience intelligence report (Claude) |
 | `GET` | `/v1/channels` | Full catalogue of tracked channels; filter with `?niche=Stories` |
 | `GET` | `/v1/usage` | Last 200 API calls made with the authenticated key |
 
@@ -324,7 +368,7 @@ empirika/
 │   ├── lib/
 │   │   ├── apiKeyManager.js       # Key creation, validation, revocation, usage logging
 │   │   ├── affinityEngine.js      # Cross-niche overlap scoring
-│   │   ├── bigqueryHelpers.js     # BQ client + query helpers (fetchNicheMetrics etc.)
+│   │   ├── bigqueryHelpers.js     # BQ client + query helpers
 │   │   ├── insightGenerator.js    # Claude-powered insight + sentiment analysis
 │   │   ├── redditApi.js           # Reddit monitoring (Week 3)
 │   │   ├── sandboxData.js         # Deterministic mock data for all 5 niches
@@ -355,27 +399,44 @@ empirika/
 │
 ├── frontend/
 │   ├── components/
-│   │   ├── landing/               # Landing page sections (Hero, Features, etc.)
-│   │   ├── AudienceOverview.jsx
-│   │   ├── AffinityInsights.jsx
-│   │   ├── SentimentTrends.jsx
-│   │   └── InsightReport.jsx
+│   │   ├── landing/               # Landing page sections
+│   │   │   ├── Navigation.jsx     # Sticky nav — routes Dashboard CTA through /login
+│   │   │   ├── Hero.jsx           # Hero with premium data visual (no emojis)
+│   │   │   ├── FeaturesGrid.jsx   # 6 features — numbered typographic layout
+│   │   │   ├── ProblemSection.jsx
+│   │   │   ├── SegmentationDeepDive.jsx
+│   │   │   ├── AffinityDeepDive.jsx
+│   │   │   ├── UseCases.jsx
+│   │   │   ├── WhyNow.jsx
+│   │   │   ├── FinalCTA.jsx
+│   │   │   └── Footer.jsx
+│   │   ├── AudienceOverview.jsx   # Metrics + sparkline trends + channel table
+│   │   ├── AffinityInsights.jsx   # Cross-niche affinity cards with progress bars
+│   │   ├── SentimentTrends.jsx    # Sentiment gauge + keyword bar list
+│   │   └── InsightReport.jsx      # AI insight — split behaviours/angles layout
+│   ├── lib/
+│   │   ├── fakeData.js            # Demo data for all 5 niches (audience, affinity,
+│   │   │                          #   sentiment, insights) — powers demo mode
+│   │   ├── bigqueryClient.js      # BigQuery queries (used in live mode)
+│   │   └── utils.js               # formatNumber, formatDuration, downloadCSV
 │   ├── pages/
+│   │   ├── _app.jsx               # AuthGuard — redirects /dashboard to /login if unauthed
 │   │   ├── index.jsx              # Landing page
-│   │   ├── dashboard.jsx          # 4-tab intelligence dashboard
-│   │   ├── developer.jsx          # Developer portal
+│   │   ├── login.jsx              # Auth gate — email + access code
+│   │   ├── dashboard.jsx          # 4-tab dashboard with logout + user email in header
+│   │   ├── developer.jsx          # Developer portal (API key management)
 │   │   └── api/
 │   │       ├── audience/[niche].js
 │   │       ├── affinity/[niche].js
 │   │       ├── sentiment/[niche].js
 │   │       ├── insights/[niche].js
 │   │       └── dev/
-│   │           ├── keys.js        # Proxy: POST/GET /v1/keys
-│   │           └── keys/[id].js   # Proxy: DELETE /v1/keys/:id
-│   ├── lib/
-│   │   ├── bigqueryClient.js
-│   │   └── utils.js
-│   └── package.json
+│   │           ├── keys.js
+│   │           └── keys/[id].js
+│   ├── styles/
+│   │   └── globals.css
+│   ├── next.config.js
+│   └── tailwind.config.js
 │
 ├── .env.example
 ├── docker-compose.yml
@@ -415,14 +476,15 @@ gcloud run deploy empirika-backend --source=./backend --region=us-central1
 
 ---
 
-## Week 3 Checklist
+## Roadmap
 
-- [ ] Fill in real channel IDs in `backend/config/channels.json`
+- [ ] Connect live BigQuery data — fill in real channel IDs in `backend/config/channels.json`
 - [ ] Add GCP service account key and run `npm run setup:auth`
 - [ ] Set `TIKTOK_API_KEY` for cross-platform trend data
-- [ ] Set `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` for sentiment pipeline
-- [ ] Switch `affinityEngine.js` to use `computeRealOverlapScore()` in production mode
+- [ ] Set `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` for live sentiment pipeline
+- [ ] Switch `affinityEngine.js` to `computeRealOverlapScore()` in production mode
 - [ ] Deploy backend to a persistent host and set `BACKEND_API_URL` in Vercel env vars
+- [ ] Replace demo auth with a proper auth provider (Clerk, Auth0, Supabase Auth)
 
 ---
 
