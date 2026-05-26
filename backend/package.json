@@ -15,11 +15,15 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
     "@google-cloud/bigquery": "^7.9.0",
+    "@supabase/supabase-js": "^2.46.0",
     "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "googleapis": "^144.0.0",
-    "snoowrap": "^1.23.0"
+    "helmet": "^8.0.0",
+    "snoowrap": "^1.23.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

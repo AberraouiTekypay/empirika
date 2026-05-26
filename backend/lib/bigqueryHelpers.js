@@ -97,6 +97,95 @@ export async function runQuery(query, params = {}) {
   return rows;
 }
 
+const PROJECT = () => process.env.GCP_PROJECT_ID;
+
+/**
+ * Fetch aggregated YouTube metrics for all channels in a niche over N days.
+ *
+ * @param {string} niche
+ * @param {number} days
+ * @returns {Promise<object[]>}
+ */
+export async function fetchNicheMetrics(niche, days = 30) {
+  const query = `
+    SELECT
+      c.channel_id,
+      c.channel_name,
+      c.subscriber_count,
+      COALESCE(SUM(e.views),                    0) AS total_views,
+      COALESCE(SUM(e.watch_time_hours),         0) AS total_watch_hours,
+      COALESCE(AVG(e.avg_view_duration_seconds),0) AS avg_view_duration_seconds,
+      COALESCE(SUM(e.subscribers_gained),       0) AS total_subscribers_gained,
+      COALESCE(SUM(e.likes),                    0) AS total_likes,
+      COALESCE(SUM(e.comments),                 0) AS total_comments
+    FROM \`${PROJECT()}.${DATASET()}.raw_youtube_channels\` c
+    LEFT JOIN \`${PROJECT()}.${DATASET()}.raw_youtube_engagement\` e
+      ON  c.channel_id = e.channel_id
+      AND e.date >= DATE_SUB(CURRENT_DATE(), INTERVAL @days DAY)
+    WHERE c.niche_category = @niche
+    GROUP BY c.channel_id, c.channel_name, c.subscriber_count
+    ORDER BY c.subscriber_count DESC
+  `;
+  return runQuery(query, { niche, days });
+}
+
+/**
+ * Fetch aggregated sentiment data for a niche from the reddit_sentiment table.
+ * Returns null if no data exists (caller should fall back to sandbox data).
+ *
+ * @param {string} niche
+ * @param {number} days
+ * @returns {Promise<{ score: number, label: string, summary: string, keywords: object[] }|null>}
+ */
+export async function fetchNicheSentiment(niche, days = 30) {
+  const query = `
+    SELECT
+      AVG(sentiment_score) * 100 AS avg_score,
+      keyword,
+      COUNT(*) AS mentions
+    FROM \`${PROJECT()}.${DATASET()}.reddit_sentiment\`
+    WHERE niche_category = @niche
+      AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL @days DAY)
+    GROUP BY keyword
+    ORDER BY mentions DESC
+    LIMIT 10
+  `;
+
+  const rows = await runQuery(query, { niche, days });
+  if (!rows.length) return null;
+
+  const score = Math.round(Number(rows[0]?.avg_score) || 50);
+  const label = score >= 70 ? 'Positive' : score >= 40 ? 'Neutral' : 'Negative';
+
+  return {
+    score,
+    label,
+    summary: `Live sentiment across ${rows.length} keyword signals from Reddit over the past ${days} days.`,
+    keywords: rows.map(r => ({ keyword: r.keyword, mentions: Number(r.mentions) })),
+  };
+}
+
+/**
+ * Fetch all tracked YouTube channels with metadata.
+ *
+ * @returns {Promise<object[]>}
+ */
+export async function fetchChannels() {
+  const query = `
+    SELECT
+      channel_id,
+      channel_name,
+      niche_category,
+      subscriber_count,
+      video_count,
+      view_count,
+      thumbnail_url
+    FROM \`${PROJECT()}.${DATASET()}.raw_youtube_channels\`
+    ORDER BY subscriber_count DESC
+  `;
+  return runQuery(query);
+}
+
 /**
  * Upsert channel metadata: delete existing row then insert.
  *

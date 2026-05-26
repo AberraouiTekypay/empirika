@@ -16,13 +16,18 @@ export default function Navigation() {
         </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
-          {['Platform', 'Use Cases', 'Documentation', 'Contact'].map(link => (
-            <a key={link} href={link === 'Contact' ? 'mailto:hello@empirika.co' : '#'}
+          {[
+            { label: 'Platform',      href: '#' },
+            { label: 'Use Cases',     href: '#' },
+            { label: 'Developers',    href: '/developer' },
+            { label: 'Contact',       href: 'mailto:hello@empirika.co' },
+          ].map(link => (
+            <a key={link.label} href={link.href}
               style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 400,
                 textDecoration: 'none', transition: 'color 0.2s' }}
               onMouseEnter={e => e.target.style.color = 'var(--text-primary)'}
               onMouseLeave={e => e.target.style.color = 'var(--text-secondary)'}>
-              {link}
+              {link.label}
             </a>
           ))}
           <a href="/dashboard" style={{
